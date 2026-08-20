@@ -1,0 +1,124 @@
+class Node:
+    def __init__(variable, key):
+        variable.key = key
+        variable.left = None
+        variable.right = None
+
+class BinarySearchTree:
+    def __init__(variable):
+        variable.root = None
+
+    def insert(variable, key):
+        variable.root = variable._insert(variable.root, key)
+
+    def _insert(variable, root, key):
+        if root is None:
+            return Node(key)
+        
+        if key < root.key:
+            root.left =variable._insert(root.left, key)
+        elif key > root.key:
+            root.right = variable._insert(root.right, key)
+        
+        return root
+
+    def search(variable, key):
+        return variable._search(variable.root, key)
+
+    def _search(variable, root, key):
+        if root is None:
+            return False
+        if root.key == key:
+            return True
+            
+        if key < root.key:
+            return variable._search(root.left, key)
+            
+        return variable._search(root.right, key)
+
+    def delete(variable, key):
+        variable.root = variable._delete(variable.root, key)
+
+    def _delete(variable, root, key):
+        if root is None:
+            return root
+
+        if key < root.key:
+            root.left = variable._delete(root.left, key)
+        elif key > root.key:
+            root.right = variable._delete(root.right, key)
+        else:
+            if root.left is None:
+                return root.right
+            elif root.right is None:
+                return root.left
+            
+            root.key = variable._min_value(root.right).key
+            
+            root.right = variable._delete(root.right, root.key)
+
+        return root
+
+    def _min_value(variable, node):
+        current = node
+        while current.left is not None:
+            current = current.left
+        return current
+
+    def inorder(variable):
+        result = []
+        variable._inorder(variable.root, result)
+        return result
+
+    def _inorder(variable, root, result):
+        if root:
+            variable._inorder(root.left, result)
+            result.append(root.key)
+            variable._inorder(root.right, result)
+
+    def preorder(variable):
+        result = []
+        variable._preorder(variable.root, result)
+        return result
+
+    def _preorder(variable, root, result):
+        if root:
+            result.append(root.key)                  
+            variable._preorder(root.left, result)   
+            variable._preorder(root.right, result)  
+
+    def postorder(variable):
+        result = []
+        variable._postorder(variable.root, result)
+        return result
+
+    def _postorder(variable, root, result):
+        if root:
+            variable._postorder(root.left, result)  
+            variable._postorder(root.right, result) 
+            result.append(root.key)
+
+
+bst = BinarySearchTree()
+
+n = int(input("Enter no.of elements : "))
+list=[]
+for i in range (0,n):
+    element = int(input("Enter element : "))
+    list.append(element)
+
+for l in list:
+    bst.insert(l)
+    
+print("In-order Traversal:", bst.inorder())
+print("Pre-order Traversal:", bst.preorder())
+print("Post-order Traversal:", bst.postorder())
+
+search_e = int(input("Enter element to search : "))
+
+print(f"Is {search_e} in the tree?", bst.search(search_e))
+
+delete_e = int(input("Enter element to delete : "))
+bst.delete(delete_e)
+
+print("After deletions:", bst.inorder())
